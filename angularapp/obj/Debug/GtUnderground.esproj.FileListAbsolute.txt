@@ -1,2 +1,0 @@
-C:\Source\GtUnderground\angularapp\obj\Debug\GtUnderground.esproj.SuggestedBindingRedirects.cache
-C:\Source\GtUnderground\angularapp\obj\Debug\GtUnderground.esproj.CoreCompileInputs.cache
