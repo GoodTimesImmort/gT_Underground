@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using gT_UndergroundAPI.Data;
 using gT_UndergroundAPI.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace gT_UndergroundAPI.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     [Route("api/[controller]")]
     [ApiController]
     public class SeedController : ControllerBase
@@ -13,17 +15,20 @@ namespace gT_UndergroundAPI.Controllers
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
 
         public SeedController(
             ApplicationDbContext context,
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
+            IWebHostEnvironment env,
             IConfiguration configuration)
         {
             _context = context;
             _roleManager = roleManager;
             _userManager = userManager;
+            _env = env;
             _configuration = configuration;
         }
 
@@ -55,12 +60,17 @@ namespace gT_UndergroundAPI.Controllers
             {
                 // create a new admin ApplicationUser account
                 var user_Admin = new ApplicationUser()
-                { SecurityStamp = Guid.NewGuid().ToString(),
+                { 
+                  SecurityStamp = Guid.NewGuid().ToString(),
                   UserName = email_Admin,
                   Email = email_Admin
                 };
 
                 // insert the admin user into the DB
+                await _userManager.CreateAsync(user_Admin,
+                    _configuration["DefaultPasswords:Administrator"]);
+
+                // assign the "RegisteredUser" and "Administrator" roles
                 await _userManager.AddToRoleAsync(user_Admin,
                     role_RegisteredUser);
                 await _userManager.AddToRoleAsync(user_Admin,
@@ -108,7 +118,7 @@ namespace gT_UndergroundAPI.Controllers
 
             return new JsonResult(new
             {
-                Count = addedUserList.Count,
+                addedUserList.Count,
                 Users = addedUserList
             });
         }
