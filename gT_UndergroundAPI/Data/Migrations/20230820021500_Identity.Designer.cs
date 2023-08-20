@@ -12,7 +12,7 @@ using gT_UndergroundAPI.Data;
 namespace gT_UndergroundAPI.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230819013424_Identity")]
+    [Migration("20230820021500_Identity")]
     partial class Identity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
