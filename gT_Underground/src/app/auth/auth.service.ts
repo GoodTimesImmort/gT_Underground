@@ -52,4 +52,7 @@ export class AuthService {
   private setAuthStatus(isAuthenticated: boolean): void {
     this._authStatus.next(isAuthenticated);
   }
+
+  // registration API
+
 }

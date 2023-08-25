@@ -46,5 +46,31 @@ namespace gT_UndergroundAPI.Controllers
                 Token = jwt
             });
         }
+
+        [HttpPost("Registration")]
+        public async Task<IActionResult> RegisterUser(RegistrationRequest registrationUser)
+        {
+            if (registrationUser == null || ModelState.IsValid == false) 
+            {
+                return BadRequest();
+            }
+
+            // var user = _mapper.Map<ApplicationUser>(registrationUser);
+
+            var user =(new ApplicationUser()
+            {
+                UserName = registrationUser.Username,
+                Email = registrationUser.Email
+            });
+            
+            var result = await _userManager.CreateAsync(user, registrationUser.Password);
+            if (!result.Succeeded) 
+            {
+                var errors = result.Errors.Select(e => e.Description);
+                return BadRequest(new RegistrationResponse { Errors = errors });
+            }
+
+            return StatusCode(201);
+        }
     }
 }
