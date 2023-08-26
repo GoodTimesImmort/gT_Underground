@@ -55,8 +55,6 @@ namespace gT_UndergroundAPI.Controllers
                 return BadRequest();
             }
 
-            // var user = _mapper.Map<ApplicationUser>(registrationUser);
-
             var user =(new ApplicationUser()
             {
                 UserName = registrationUser.Username,
@@ -67,10 +65,14 @@ namespace gT_UndergroundAPI.Controllers
             if (!result.Succeeded) 
             {
                 var errors = result.Errors.Select(e => e.Description);
-                return BadRequest(new RegistrationResponse { Errors = errors });
+                return BadRequest(new RegistrationResult { Errors = errors });
             }
 
-            return StatusCode(201);
+            return Ok(new RegistrationResult()
+            {
+                Success = true,
+                Message = "Registration successful."
+            });
         }
     }
 }

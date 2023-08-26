@@ -49,7 +49,7 @@ export class AuthService {
 
   // registration API
   registerUser(item: RegistrationRequest): Observable<RegistrationResult> {
-    var url = environment.baseUrl + "api/Account/Register";
+    var url = environment.baseUrl + "api/Account/Registration";
     return this.http.post<RegistrationResult>(url, item);
   }
 
