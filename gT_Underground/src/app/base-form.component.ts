@@ -19,16 +19,16 @@ export class BaseFormComponent {
     Object.keys(control.errors || {}).forEach((key) => {
       switch (key) {
         case 'required':
-          errors.push('${displayName} is required.');
+          errors.push(`${displayName} is required.`);
           break;
         case 'pattern':
-          errors.push('${displayName} contains invalid characters.');
+          errors.push(`${displayName} contains invalid characters.`);
           break;
         case 'isDupeField':
-          errors.push('${displayName} already exists: please choose another.');
+          errors.push(`${displayName} already exists: please choose another.`);
           break;
         default:
-          errors.push('${displayname} is invalid.');
+          errors.push(`${displayName} is invalid.`);
           break;
       }
     });
