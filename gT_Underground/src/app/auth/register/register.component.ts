@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -30,10 +31,11 @@ export class RegisterComponent extends BaseFormComponent implements OnInit {
     this.form = new FormGroup({
       firstName: new FormControl(''),
       lastName: new FormControl(''),
-      email: new FormControl('', Validators.required),
+      email: new FormControl('',
+        [Validators.required, Validators.email]),
       userName: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
-      passwordConfirmation: new FormControl('', Validators.required)
+      passwordConfirmation: new FormControl('', [Validators.required])
     });
   }
 
@@ -44,21 +46,14 @@ export class RegisterComponent extends BaseFormComponent implements OnInit {
     registrationRequest.email = this.form.controls['email'].value;
     registrationRequest.userName = this.form.controls['userName'].value;
     registrationRequest.password = this.form.controls['password'].value;
+    registrationRequest.passwordConfirmation = this.form.controls['passwordConfirmation'].value;
 
     this.authService
       .registerUser(registrationRequest)
-      .subscribe(result => {
-        console.log(result);
-        this.registrationResult = result;
-        if (result.success) {
-          this.router.navigate(["/"]);
-        }
-      }, error => {
-        console.log(error);
-        if (error.status == 401) {
-          this.registrationResult = error.error;
-        }
-      });
+      .subscribe({
+        next: (_) => console.log("Successful registration"),
+        error: (err: HttpErrorResponse) => console.log(err.error.errors)
+      })
   }
 
 }

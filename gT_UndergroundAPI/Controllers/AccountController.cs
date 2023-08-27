@@ -11,15 +11,18 @@ namespace gT_UndergroundAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtHandler _jwtHandler;
 
         public AccountController(
             ApplicationDbContext context,
+            RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
             JwtHandler jwtHandler)
         {
             _context = context;
+            _roleManager = roleManager;
             _userManager = userManager;
             _jwtHandler = jwtHandler;
         }
@@ -54,9 +57,12 @@ namespace gT_UndergroundAPI.Controllers
             {
                 return BadRequest();
             }
-
-            var user =(new ApplicationUser()
+            
+            var user = (new ApplicationUser()
             {
+                SecurityStamp = Guid.NewGuid().ToString(),
+                FirstName = registrationUser.FirstName,
+                LastName = registrationUser.LastName,
                 UserName = registrationUser.Username,
                 Email = registrationUser.Email
             });
@@ -65,6 +71,7 @@ namespace gT_UndergroundAPI.Controllers
             if (!result.Succeeded) 
             {
                 var errors = result.Errors.Select(e => e.Description);
+                Console.WriteLine("result !success");
                 return BadRequest(new RegistrationResult { Errors = errors });
             }
 
