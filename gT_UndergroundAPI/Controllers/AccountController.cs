@@ -11,15 +11,18 @@ namespace gT_UndergroundAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtHandler _jwtHandler;
 
         public AccountController(
             ApplicationDbContext context,
+            RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
             JwtHandler jwtHandler)
         {
             _context = context;
+            _roleManager = roleManager;
             _userManager = userManager;
             _jwtHandler = jwtHandler;
         }
@@ -44,6 +47,47 @@ namespace gT_UndergroundAPI.Controllers
                 Success = true,
                 Message = "Login successful.",
                 Token = jwt
+            });
+        }
+
+        [HttpPost("Registration")]
+        public async Task<IActionResult> RegisterUser(RegistrationRequest registrationUser)
+        {
+            if (registrationUser == null || ModelState.IsValid == false) 
+            {
+
+                return Ok(new RegistrationResult()
+                {
+                    Success = false,
+                    Message = "Problem registering user."
+                });
+            }
+            
+            var user = (new ApplicationUser()
+            {
+                SecurityStamp = Guid.NewGuid().ToString(),
+                FirstName = registrationUser.FirstName,
+                LastName = registrationUser.LastName,
+                UserName = registrationUser.Username,
+                Email = registrationUser.Email
+            });
+            
+            var result = await _userManager.CreateAsync(user, registrationUser.Password);
+            if (!result.Succeeded) 
+            {
+                var errors = result.Errors.Select(e => e.Description);
+                
+                return Ok(new RegistrationResult 
+                {
+                    Success = false,
+                    Errors = errors 
+                });
+            }
+
+            return Ok(new RegistrationResult()
+            {
+                Success = true,
+                Message = "Registration successful."
             });
         }
     }

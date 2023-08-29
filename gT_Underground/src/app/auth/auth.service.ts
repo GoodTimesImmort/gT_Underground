@@ -4,6 +4,8 @@ import { Observable, Subject, tap } from 'rxjs';
 
 import { LoginRequest } from './login-request';
 import { LoginResult } from './login-result';
+import { RegistrationRequest } from './register/registration-request';
+import { RegistrationResult } from './register/registration-result';
 import { environment } from './../../environments/environment';
 
 @Injectable({
@@ -17,7 +19,8 @@ export class AuthService {
   public authStatus = this._authStatus.asObservable();
 
   constructor(
-    protected http: HttpClient) {
+    protected http: HttpClient,
+  ) {
   }
 
   isAuthenticated(): boolean {
@@ -44,6 +47,12 @@ export class AuthService {
     }));
   }
 
+  // registration API
+  registerUser(item: RegistrationRequest): Observable<RegistrationResult> {
+    var url = environment.baseUrl + "api/Account/Registration";
+    return this.http.post<RegistrationResult>(url, item);
+  }
+
   logout() {
     localStorage.removeItem(this.tokenKey);
     this.setAuthStatus(false);
@@ -52,4 +61,6 @@ export class AuthService {
   private setAuthStatus(isAuthenticated: boolean): void {
     this._authStatus.next(isAuthenticated);
   }
+
+  
 }

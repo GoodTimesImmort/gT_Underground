@@ -6,7 +6,4 @@
     <StartupCommand>npm start</StartupCommand>
     <JavaScriptTestFramework>Jasmine</JavaScriptTestFramework>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="src\app\auth\" />
-  </ItemGroup>
 </Project>
