@@ -3,9 +3,9 @@
   <h1>Register</h1>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-    <p>
-      <mat-error *ngIf="registrationResult && registrationResult.success == false">
-        <strong>ERROR</strong>: {{registrationResult.message}}
+    <p *ngIf="registrationResult && registrationResult.success == false">
+      <mat-error *ngFor="let error of registrationResult.errors">
+        {{error}}
       </mat-error>
     </p>
 

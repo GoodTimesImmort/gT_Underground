@@ -50,10 +50,15 @@ export class RegisterComponent extends BaseFormComponent implements OnInit {
 
     this.authService
       .registerUser(registrationRequest)
-      .subscribe({
-        next: (_) => console.log("Successful registration"),
-        error: (err: HttpErrorResponse) => console.log(err.error.errors)
-      })
+      .subscribe(result => {
+        this.registrationResult = result;
+
+
+      if (this.registrationResult.success) {
+          this.router.navigate(['login']);
+        }
+          
+      }, error => console.error(error));
   }
 
 }

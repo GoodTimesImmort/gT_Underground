@@ -55,7 +55,12 @@ namespace gT_UndergroundAPI.Controllers
         {
             if (registrationUser == null || ModelState.IsValid == false) 
             {
-                return BadRequest();
+
+                return Ok(new RegistrationResult()
+                {
+                    Success = false,
+                    Message = "Problem registering user."
+                });
             }
             
             var user = (new ApplicationUser()
@@ -71,8 +76,12 @@ namespace gT_UndergroundAPI.Controllers
             if (!result.Succeeded) 
             {
                 var errors = result.Errors.Select(e => e.Description);
-                Console.WriteLine("result !success");
-                return BadRequest(new RegistrationResult { Errors = errors });
+                
+                return Ok(new RegistrationResult 
+                {
+                    Success = false,
+                    Errors = errors 
+                });
             }
 
             return Ok(new RegistrationResult()
