@@ -9,6 +9,7 @@ import { BaseFormComponent } from '../../base-form.component';
 import { AuthService } from '../auth.service';
 import { RegistrationRequest } from './registration-request';
 import { RegistrationResult } from './registration-result';
+import { PasswordMatchValidator } from './password-match.validator';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +20,7 @@ export class RegisterComponent extends BaseFormComponent implements OnInit {
 
   title?: string;
   registrationResult?: RegistrationResult;
+  regErrors: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -31,11 +33,19 @@ export class RegisterComponent extends BaseFormComponent implements OnInit {
     this.form = new FormGroup({
       firstName: new FormControl(''),
       lastName: new FormControl(''),
-      email: new FormControl('',
-        [Validators.required, Validators.email]),
-      userName: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required),
-      passwordConfirmation: new FormControl('', [Validators.required])
+      email: new FormControl('', Validators.compose([
+          Validators.required,
+          Validators.email])),
+      userName: new FormControl('', Validators.compose([
+          Validators.required,
+          Validators.minLength(3)])),
+      password: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.minLength(8)])),
+      passwordConfirmation: new FormControl('', Validators.compose([
+        Validators.required]))
+    }, {
+      validators: PasswordMatchValidator('password', 'confirmPassword')
     });
   }
 
@@ -56,9 +66,11 @@ export class RegisterComponent extends BaseFormComponent implements OnInit {
 
       if (this.registrationResult.success) {
           this.router.navigate(['login']);
-        }
-          
-      }, error => console.error(error));
-  }
+      }
 
+    }, err => {
+        console.error(err.error.errors);
+        this.regErrors = err.error.errors;
+    });
+  }
 }
