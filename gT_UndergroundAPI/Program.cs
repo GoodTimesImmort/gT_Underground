@@ -11,7 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddHealthChecks()
     .AddCheck("ICMP_01",
         new ICMPHealthCheck("www.everi.com", 100))

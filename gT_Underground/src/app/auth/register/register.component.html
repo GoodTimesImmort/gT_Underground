@@ -67,12 +67,12 @@
              placeholder="Confirm Password" />
       <mat-error *ngFor="let error of getErrors(form.get('passwordConfirmation')!,
                  'PasswordConfirmation')">
-        {{error}}
+        "Password confirmation must match."
       </mat-error>
     </mat-form-field>
 
     <div>
-      <button mat-flat-button color="primary" type="submit">
+      <button mat-flat-button color="primary" type="submit" [disabled]="form.valid == false">
         Register
       </button>
       <button mat-flat-button color="secondary"
