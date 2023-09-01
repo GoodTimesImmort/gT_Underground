@@ -6,12 +6,6 @@
         home
       </mat-icon>
     </button>
-    <a mat-flat-button color="primary" [routerLink]="['/fetch-data']">
-      Fetch Data
-    </a>
-    <a mat-flat-button color="primary" [routerLink]="['/health-check']">
-      Health Check
-    </a>
     <span class="separator"></span>
     <a *ngIf="isLoggedIn == false" mat-flat-button color="primary" [routerLink]="['/login']">
       Login
